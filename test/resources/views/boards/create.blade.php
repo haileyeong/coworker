@@ -36,9 +36,9 @@
             background-color: #ebebeb;
         }
 
-        #newPost {
+        #back {
             background-color: white;
-            text-align: right;
+            text-align: left;
             border-color: white;
         }
 
@@ -46,29 +46,24 @@
 </head>
 <body>
 <table>
-    <thead>
-    <tr>
-        <th>번호</th>
-        <th>제목</th>
-        <th>조회수</th>
-        <th>작성일</th>
-    </tr>
-    </thead>
-
-    @foreach ($boards as $board)
     <tbody>
-        <tr>
-            <td>{{ $board->id }}</td>
-            <td><a href="{{ route('boards.show', $board->id) }}">{{ $board->title }}</a></td>
-            <td>{{ $board->hit }}</td>
-            <td>{{ $board->created_at->format('Y-m-d') }}</td>
-        </tr>
+    <form>
+    <tr>
+        <td>제목</td>
+        <td><input></td>
+    </tr>
+    <tr>
+        <td>내용</td>
+        <td><textarea></textarea></td>
+    </tr>
+    </form>
+
+
 
         <tr>
-            <td colspan="4" id="newPost"><a href="/new">새 글 작성</a></td>
+            <td id="back"><a href="/">이전으로</a></td>
         </tr>
     </tbody>
-    @endforeach
 
 </table>
 </body>

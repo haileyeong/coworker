@@ -10,7 +10,7 @@ class BoardController extends Controller
     // 게시글 조회
     public function index()
     {
-        $boards = board::all();
+        $boards = Board::all();
         return view('boards.index', compact('boards'));
     }
 
@@ -19,7 +19,7 @@ class BoardController extends Controller
      */
     public function create()
     {
-        //
+        return view('boards.create');
     }
 
     /**
@@ -35,7 +35,7 @@ class BoardController extends Controller
      */
     public function show(string $id)
     {
-        //
+
     }
 
     /**
@@ -43,7 +43,7 @@ class BoardController extends Controller
      */
     public function edit(string $id)
     {
-        //
+
     }
 
     /**
