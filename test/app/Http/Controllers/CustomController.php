@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Board;
 use Illuminate\Http\Request;
 
-class BoardController extends Controller
+class CustomController extends Controller
 {
     // index
     public function index()
@@ -17,15 +17,15 @@ class BoardController extends Controller
     public function board()
     {
         $boards = Board::all();
-        return view('boards.board', compact('boards'));
+        return view('custom.board', compact('boards'));
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-
+        return view('custom.new');
     }
 
     /**
@@ -33,7 +33,23 @@ class BoardController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|string|max:100',
+            'content' => 'required|string|max:2000',
+        ]);
+
+        // 새로운 게시글 인스턴스 생성
+        $board = new Board();
+
+        // 대량 할당을 사용하여 게시글 데이터 저장
+        $board->fill([
+            'title' => $request->input('title'),
+            'content' => $request->input('content')
+        ]);
+
+        $board->save();
+
+        return redirect()->route('custom.board');
     }
 
     /**
@@ -43,7 +59,7 @@ class BoardController extends Controller
     {
         $board = Board::findOrFail($id); // id에 맞는 게시글 가져오기
         $board->increment('hit');
-        return view('boards.show', compact('board')); // view로 전달
+        return view('custom.show', compact('board')); // view로 전달
     }
 
     /**
@@ -59,30 +75,18 @@ class BoardController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
-            'title' => 'required|string|max:100',
-            'content' => 'required|string|max:2000',
-        ]);
-
-        $board = Board::findOrFail($id);
-
-        // 업데이트, 저장
-        $board->update([
-            'title' => $request->input('title'),
-            'content' => $request->input('content'),
-        ]);
-
-        $board->save();
-
-        // 업데이트 후 게시판 목록 페이지로 리디렉션
-        return redirect()->route('boards.board');
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $board = Board::findOrFail($id);
+        $board->delete();
+
+        // 삭제 후 게시판 목록 페이지로 리디렉션
+        return redirect()->route('custom.board');
     }
 }
