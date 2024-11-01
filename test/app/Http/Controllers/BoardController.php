@@ -44,8 +44,6 @@ class BoardController extends Controller
     {
         $board = Board::findOrFail($id); // id에 맞는 게시글 가져오기
         $board->increment('hit');
-        $board->created_at = Carbon::parse($board->created_at)->addHours(9);
-        $board->updated_at = Carbon::parse($board->updated_at)->addHours(9);
         return view('boards.show', compact('board')); // view로 전달
     }
 
@@ -53,6 +51,7 @@ class BoardController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
+
     {
 
     }
