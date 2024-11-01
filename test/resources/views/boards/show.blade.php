@@ -21,7 +21,7 @@
     </tr>
     <tr>
         <th>작성일</th>
-        <td>{{ $board -> created_at -> format('Y-m-d') }}</td>
+        <td>{{ $board -> created_at -> format('Y-m-d H:i') }}</td>
     </tr>
     <tr>
         <th>제목</th>

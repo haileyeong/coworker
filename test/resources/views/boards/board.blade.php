@@ -25,9 +25,6 @@
             <td>{{ $board->created_at->format('Y-m-d') }}</td>
         </tr>
 
-{{--        <tr>--}}
-{{--            <td colspan="4" id="newPost"><a href="/new">새 글 작성</a></td>--}}
-{{--        </tr>--}}
     </tbody>
     @endforeach
 

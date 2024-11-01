@@ -15,3 +15,7 @@ Route::post('/custom-new', [CustomController::class, 'store'])->name('custom.sto
 Route::delete('/custom-board/{id}', [CustomController::class, 'destroy'])->name('custom.destroy');
 
 Route::resource('boards', BoardController::class);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

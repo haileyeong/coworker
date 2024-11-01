@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Board;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class BoardController extends Controller
@@ -39,10 +40,12 @@ class BoardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
         $board = Board::findOrFail($id); // id에 맞는 게시글 가져오기
         $board->increment('hit');
+        $board->created_at = Carbon::parse($board->created_at)->addHours(9);
+        $board->updated_at = Carbon::parse($board->updated_at)->addHours(9);
         return view('boards.show', compact('board')); // view로 전달
     }
 
@@ -57,7 +60,7 @@ class BoardController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'title' => 'required|string|max:100',
