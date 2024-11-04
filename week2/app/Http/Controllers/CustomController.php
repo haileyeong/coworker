@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Board;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CustomController extends Controller
 {
@@ -43,6 +44,7 @@ class CustomController extends Controller
 
         // 대량 할당을 사용하여 게시글 데이터 저장
         $board->fill([
+            'user_id' => Auth::id(),
             'title' => $request->input('title'),
             'content' => $request->input('content')
         ]);
@@ -67,15 +69,30 @@ class CustomController extends Controller
      */
     public function edit(string $id)
     {
-
+        $board = Board::findOrFail($id);
+        return view('custom.edit', compact('board'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        @$request -> validate([
+            'title' => 'required|string|max:100',
+            'content' => 'required|string|max:2000',
+        ]);
+
+        $board = Board::findOrFail($id);
+
+        $board->update([
+           'title' => $request->input('title'),
+           'content' => $request->input('content')
+        ]);
+
+        $board->save();
+
+        return redirect()->route('custom.board')->with('success', '수정 완료');
     }
 
     /**

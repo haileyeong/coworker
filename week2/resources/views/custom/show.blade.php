@@ -8,6 +8,10 @@
         function back() {
             window.location.href = "/custom-board";
         }
+
+        function update(id) {
+            window.location.href = `/custom-update/${id}`;
+        }
     </script>
 </head>
 <body>
@@ -19,6 +23,10 @@
     <tr>
         <th>작성일</th>
         <td>{{ $board -> created_at -> format('Y-m-d H:i') }}</td>
+    </tr>
+    <tr>
+        <th>작성자</th>
+        <td>{{ $board -> user -> nickname }}</td>
     </tr>
     <tr>
         <th>제목</th>
@@ -40,8 +48,10 @@
     <li>
         <button onclick="back()">뒤로가기(취소)</button>
     </li>
+
+    @if (Auth::check() && Auth::id() === $board->user_id)
     <li>
-        <button>수정</button>
+        <button onclick="update({{ $board->id }})">수정</button>
     </li>
     <form action="{{ route('custom.destroy', $board->id) }}" method="POST" style="display:inline;">
         @csrf
@@ -50,6 +60,7 @@
             <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
         </li>
     </form>
+    @endif
 </ul>
 
 </body>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Board;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BoardController extends Controller
 {
@@ -32,9 +33,24 @@ class BoardController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+        public function store(Request $request)
     {
-        //
+        // 폼 요청 유효성 검사
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        // 새로운 게시글 생성
+        Board::create([
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+            'hit' => 0, // 기본값 0으로 설정
+            'user_id' => Auth::id(), // 현재 로그인한 사용자의 ID 삽입
+        ]);
+
+        // 리디렉션 및 메시지 설정
+        return redirect()->route('/custom-board')->with('success', '게시글이 성공적으로 작성되었습니다.');
     }
 
     /**
@@ -42,7 +58,8 @@ class BoardController extends Controller
      */
     public function show($id)
     {
-        $board = Board::findOrFail($id); // id에 맞는 게시글 가져오기
+        Board::findOrFail($id); // id에 맞는 게시글 가져오기
+        $board = Board::with('user')->findOrFail($id);
         $board->increment('hit');
         return view('boards.show', compact('board')); // view로 전달
     }
@@ -85,6 +102,7 @@ class BoardController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+
+
     }
 }
