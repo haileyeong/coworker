@@ -78,21 +78,26 @@ class CustomController extends Controller
      */
     public function update(Request $request, $id)
     {
-        @$request -> validate([
+        $request -> validate([
             'title' => 'required|string|max:100',
             'content' => 'required|string|max:2000',
         ]);
 
         $board = Board::findOrFail($id);
 
-        $board->update([
-           'title' => $request->input('title'),
-           'content' => $request->input('content')
-        ]);
+        $userId = auth()->id();
 
-        $board->save();
+        if ($board -> user_id === $userId) {
+            $board -> update([
+                'title' => $request->input('title'),
+                'content' => $request->input('content')
+            ]);
 
-        return redirect()->route('custom.board')->with('success', '수정 완료');
+            return redirect() -> route('custom.board');
+        } else {
+            return redirect()->route('custom.board')->with('error', '권한이 없습니다.');
+
+        }
     }
 
     /**
@@ -101,9 +106,16 @@ class CustomController extends Controller
     public function destroy($id)
     {
         $board = Board::findOrFail($id);
-        $board->delete();
 
-        // 삭제 후 게시판 목록 페이지로 리디렉션
-        return redirect()->route('custom.board');
+        $userId = auth()->id();
+
+        if ($board->user_id === $userId) {
+            $board->delete();
+
+            return redirect()->route('custom.board');
+        } else {
+            return redirect()->route('custom.board')->with('error', '권한이 없습니다.');
+        }
+
     }
 }

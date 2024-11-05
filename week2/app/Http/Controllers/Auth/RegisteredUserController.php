@@ -33,8 +33,15 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'nickname' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/[a-z]/', // 소문자 포함
+                'regex:/[0-9]/', // 숫자 포함
+                'confirmed', // 비밀번호 확인
+            ],
         ]);
 
         $user = User::create([
@@ -44,10 +51,6 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
-
-        Auth::login($user);
-
-        return redirect(RouteServiceProvider::HOME);
+        return redirect()->route('login')->with('status', '회원가입이 완료되었습니다. 로그인해주세요.');
     }
 }

@@ -54,7 +54,7 @@
         <button onclick="update({{ $board->id }})">수정</button>
     </li>
     <form action="{{ route('custom.destroy', $board->id) }}" method="POST" style="display:inline;">
-        @csrf
+{{--        @csrf--}}
         @method('DELETE')
         <li>
             <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
