@@ -6,7 +6,6 @@ use App\Http\Controllers\CustomController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
 
-//
 ///*
 //|--------------------------------------------------------------------------
 //| Web Routes
@@ -16,12 +15,7 @@ use App\Http\Controllers\HomeController;
 //| routes are loaded by the RouteServiceProvider and all of them will
 //| be assigned to the "web" middleware group. Make something great!
 //|
-//*/
-//
-//Route::get('/', function () {
-//    return view('welcome');
-//});
-//
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -31,8 +25,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-//Route::get()
 
 require __DIR__.'/auth.php';
 
@@ -53,5 +45,3 @@ Route::post('/custom-new', [CustomController::class, 'store'])->name('custom.sto
 Route::delete('/custom-board/{id}', [CustomController::class, 'destroy'])->name('custom.destroy');
 
 Route::resource('boards', BoardController::class);
-
-//Auth::routes();
