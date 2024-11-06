@@ -1,4 +1,35 @@
 <x-guest-layout>
+    <script>
+        function sendCode() {
+            const email = document.getElementById('email').value;
+
+            if (!email) {
+                alert("이메일을 입력해주세요.");
+                return;
+            }
+
+            fetch('{{ route('emails.verify') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({ email: email })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("인증번호가 이메일로 발송되었습니다.");
+                    } else {
+                        alert("인증번호 발송에 실패했습니다. 이메일 주소를 확인해주세요.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("오류 발생");
+                });
+        }
+    </script>
 
     <form method="POST" action="{{ route('register') }}">
         @csrf
@@ -21,10 +52,17 @@
 
         <!-- Email Address -->
         <div class="mt-4">
-            <x-input-label for="email" :value="__('이메일')"/>
+        <x-input-label for="email" :value="__('이메일')"/>
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
                           autocomplete="username"/>
             <x-input-error :messages="$errors->get('email')" class="mt-2"/>
+        </div>
+
+        <!-- 인증번호 발송 버튼 -->
+        <div class="flex items-center justify-end mt-4">
+        <x-primary-button class="ms-4" onclick="sendCode()">
+            {{ __('인증번호 발송') }}
+        </x-primary-button>
         </div>
 
         <!-- Password -->

@@ -5,6 +5,7 @@ use App\Http\Controllers\BoardController;
 use App\Http\Controllers\CustomController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\VerificationController;
 
 ///*
 //|--------------------------------------------------------------------------
@@ -27,6 +28,8 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::post('/send-verification-code', [VerificationController::class, 'sendVerificationCode'])->name('emails.verify');
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
