@@ -4,15 +4,9 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\SendVerificationCode;
-use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -45,19 +39,21 @@ class RegisteredUserController extends Controller
                 'regex:/[0-9]/', // 숫자 포함
                 'confirmed', // 비밀번호 확인
             ],
-        ], [
-            'name.required' => '이름을 입력해주세요.',
-            'name.regex' => '이름을 정확하게 입력해주세요.',
-            'nickname.required' => '닉네임을 입력해주세요.',
-            'nickname.unique' => '이미 사용중인 닉네임입니다.',
-            'email.required' => '이메일을 입력해주세요.',
-            'email.lowercase' => '이메일은 소문자로 입력해야 합니다.',
-            'email.unique' => '이메일은 이미 사용 중입니다.',
+        ]);
+//        ,
+//            [
+//            'name.required' => '이름을 입력해주세요.',
+//            'name.regex' => '이름을 정확하게 입력해주세요.',
+//            'nickname.required' => '닉네임을 입력해주세요.',
+//            'nickname.unique' => '이미 사용중인 닉네임입니다.',
+//            'email.required' => '이메일을 입력해주세요.',
+//            'email.lowercase' => '이메일은 소문자로 입력해야 합니다.',
+//            'email.unique' => '이메일은 이미 사용 중입니다.',
 //            'password.required' => '비밀번호를 입력해주세요.',
 //            'password.min' => '비밀번호는 최소 8자 이상이어야 합니다.',
 //            'password.regex' => '비밀번호는 소문자와 숫자를 포함해야 합니다.',
 //            'password.confirmed' => '비밀번호가 일치하지 않습니다.',
-        ]);
+//        ]);
 
         $verificationCode = mt_rand(100000, 999999);
 
@@ -69,9 +65,16 @@ class RegisteredUserController extends Controller
             'email_verification_code' => $verificationCode,
         ]);
 
-        Mail::to($user->email)->send(new SendVerificationCode($verificationCode));
-
         return redirect()->route('login')->with('status', '회원가입이 완료되었습니다. 로그인해주세요.');
+    }
+
+    public function checkEmail(Request $request)
+    {
+        $request->validate(['email' => 'required|email']);
+
+        $exists = User::where('email', $request->email)->exists();
+
+        return response()->json(['exists' => $exists]);
     }
 
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\CustomController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -16,6 +17,8 @@ Route::middleware('guest')->group(function () {
                 ->name('register');
 
     Route::post('register', [RegisteredUserController::class, 'store']);
+
+    Route::post('/check-email', [RegisteredUserController::class, 'checkEmail']);
 
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
                 ->name('login');
@@ -36,6 +39,17 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
+
+    Route::get('/custom-board', [CustomController::class, 'board'])->name('custom.board');
+    Route::get('/custom-board/{id}', [CustomController::class, 'show'])->name('custom.show');
+
+    Route::get('/custom-update/{id}', [CustomController::class, 'edit'])->name('custom.edit');
+    Route::post('/custom-update/{id}', [CustomController::class, 'update'])->name('custom.update');
+
+    Route::get('/custom-new', [CustomController::class, 'create'])->name('custom.new');
+    Route::post('/custom-new', [CustomController::class, 'store'])->name('custom.store');
+    Route::delete('/custom-board/{id}', [CustomController::class, 'destroy'])->name('custom.destroy');
+
     Route::get('verify-email', EmailVerificationPromptController::class)
                 ->name('verification.notice');
 
