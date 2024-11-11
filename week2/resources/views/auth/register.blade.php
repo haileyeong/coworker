@@ -40,7 +40,7 @@
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('비밀번호')"/>
+            <x-input-label for="password" :value="__('비밀번호 (소문자, 숫자 포함 8자 이상)')"/>
 
             <x-text-input id="password" class="block mt-1 w-full"
                           type="password"

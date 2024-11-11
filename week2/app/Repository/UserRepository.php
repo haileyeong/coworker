@@ -7,21 +7,19 @@ use Illuminate\Support\Facades\Hash;
 
 class UserRepository
 {
+
     public function create($name, $nickname, $email, $password)
     {
         return User::create([
-            'name'=>$name,
-            'nickname'=>$nickname,
-            'email'=>$email,
-            'password' => bcrypt($password),
+            'name' => $name,
+            'nickname' => $nickname,
+            'email' => $email,
+            'password' => Hash::make($password), //bcrypt()
         ]);
-
-        return $this->userRepository->create($dto->name, $dto->nickname, $dto->email, $dto->password);
     }
-//
-//    public function checkedEmail($email)
-//    {
-//        return User::where('email', $email)->exists();
-//    }
 
+    public function checkedEmail($email): bool
+    {
+        return User::where('email', $email)->exists();
+    }
 }
